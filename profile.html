@@ -1,199 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Farm Profile — Raitha Bandhu</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css">
+  <style>
+    .profile-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 32px;
+      padding: 0 24px;
+    }
 
-<title>Raitha Bandhu-profile</title>
+    /* ── SIDEBAR ────────────────────────────────────────────── */
+    .profile-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css">
+    .user-card {
+      background: white;
+      padding: 32px;
+      border-radius: 24px;
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
 
-<style>
+    .profile-avatar-wrap {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+    }
 
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    .p-avatar {
+      width: 100%;
+      height: 100%;
+      background: var(--green-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      border: 2px solid var(--green-border);
+    }
 
-body {
-  background: #f8fafc;
-  font-family: system-ui, sans-serif;
-}
+    .p-badge {
+      position: absolute;
+      bottom: -5px;
+      right: -5px;
+      background: #10b981;
+      color: white;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 2px solid white;
+    }
 
-/* LAYOUT */
-.profile-container {
-  max-width: 1200px;
-  margin: 40px auto;
-  display: grid;
-  grid-template-columns: minmax(260px, 320px) 1fr;
-  gap: 32px;
-  padding: 0 24px;
-}
+    .p-name { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .p-id { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 24px; }
 
-/* SIDEBAR */
-.profile-sidebar {
-  position: sticky;
-  top: 100px;
-}
+    .btn-logout {
+      width: 100%;
+      padding: 12px;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
 
-.user-card {
-  background: #fff;
-  padding: 28px;
-  border-radius: 20px;
-  border: 1px solid #e5e7eb;
-  text-align: center;
-}
+    .btn-logout:hover { background: #fecaca; transform: translateY(-2px); }
 
-/* MAIN CARD */
-.main-card {
-  background: #fff;
-  padding: 28px;
-  border-radius: 20px;
-  border: 1px solid #e5e7eb;
-}
+    /* ── MAIN CONTENT ─────────────────────────────────────────── */
+    .main-card {
+      background: white;
+      padding: 32px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
 
-/* FORM */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+    .card-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.input-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
 
-.p-input {
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  padding: 13px;
-  border-radius: 12px;
-}
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-/* 🔥 BUTTON FIX (FINAL) */
-button.btn-save-up {
-  all: unset;
+    .input-wrap label {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-  grid-column: 1 / -1;
+    .p-input {
+      background: #f1f5f9;
+      border: 2px solid transparent;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.3s;
+      width: 100%;
+    }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    .p-input:focus {
+      outline: none;
+      background: white;
+      border-color: var(--green);
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
 
-  width: 100%;
-  padding: 15px;
+    .btn-save-up {
+      grid-column: 1 / -1;
+      background: var(--green);
+      color: white;
+      padding: 18px;
+      border-radius: 18px;
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 12px;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+      transition: all 0.3s;
+    }
 
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 800;
+    .btn-save-up:hover {
+      background: var(--green-mid);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+    }
 
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff;
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
 
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+    .stat-box {
+      background: white;
+      padding: 24px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-button.btn-save-up:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(16,185,129,0.25);
-}
+    .s-val { font-size: 20px; font-weight: 900; color: var(--text); }
+    .s-lbl { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
 
-button.btn-save-up:active {
-  transform: scale(0.97);
-}
-
-button.btn-save-up:disabled {
-  opacity: 0.6;
-}
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .profile-container {
-    grid-template-columns: 1fr;
-  }
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-</style>
+    @media (max-width: 900px) {
+      .profile-container { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .quick-stats { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
 
-<main class="profile-container">
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="brand">
+          <img src="logo.png" alt="Logo" class="app-logo-img">
+          <span class="brand-name">Raitha Bandhu</span>
+        </a>
+        <nav class="nav-tabs">
+          <a href="index.html" class="nav-tab" data-i18n="nav_home">Home</a>
+          <a href="mandi.html" class="nav-tab" data-i18n="nav_mandi">Mandi Prices</a>
+          <a href="weather.html" class="nav-tab" data-i18n="nav_weather">Weather</a>
+        </nav>
+      </div>
 
-  <aside class="profile-sidebar">
-    <div class="user-card">
-      <h2>Farmer Name</h2>
-      <p>RB-0000-0000</p>
+      <div class="header-right">
+        <div class="search-bar">
+          <span class="search-trigger-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search crops…" autocomplete="off">
+          <div id="suggestions" class="suggestions"></div>
+        </div>
+        <div id="authSection" class="auth-section"></div>
+        <button id="langToggleBtn" class="lang-toggle-btn" onclick="toggleLanguage()">ಕನ್ನಡ</button>
+      </div>
     </div>
-  </aside>
+  </header>
 
-  <div class="profile-main">
-    <div class="main-card">
-
-      <h3>Update Farm Profile</h3>
-
-      <form class="form-grid">
-
-        <div class="input-wrap">
-          <label>Name</label>
-          <input type="text" class="p-input">
+  <main class="profile-container">
+    
+    <aside class="profile-sidebar">
+      <div class="user-card">
+        <div class="profile-avatar-wrap">
+          <div class="p-avatar">🧑‍🌾</div>
+          <div class="p-badge">VERIFIED</div>
         </div>
-
-        <div class="input-wrap">
-          <label>Phone</label>
-          <input type="text" class="p-input">
+        <h2 class="p-name" id="userNameDisplay">Farmer Name</h2>
+        <div class="p-id" id="userPhoneDisplay">RB-0000-0000</div>
+        
+        <div class="p-actions">
+          <button onclick="logout()" class="btn-logout" data-i18n="btn_logout_account">🚪 Logout Account</button>
         </div>
+      </div>
+    </aside>
 
-        <div class="input-wrap">
-          <label>District</label>
-          <select class="p-input"></select>
+    <div class="profile-main">
+      
+      <div class="quick-stats">
+        <div class="stat-box">
+          <div class="s-val" id="statLoc">--</div>
+          <div class="s-lbl" data-i18n="profile_region">Region</div>
         </div>
-
-        <div class="input-wrap">
-          <label>Taluk</label>
-          <select class="p-input"></select>
+        <div class="stat-box">
+          <div class="s-val" id="statCrop">--</div>
+          <div class="s-lbl" data-i18n="profile_active_crop">Active Crop</div>
         </div>
-
-        <div class="input-wrap">
-          <label>Mandi</label>
-          <select class="p-input"></select>
+        <div class="stat-box">
+          <div class="s-val" id="statMandi">--</div>
+          <div class="s-lbl" data-i18n="profile_mandi">Saved Mandi</div>
         </div>
+      </div>
 
-        <div class="input-wrap">
-          <label>Crop</label>
-          <select class="p-input"></select>
-        </div>
-
-        <div class="input-wrap">
-          <label>Soil</label>
-          <select class="p-input"></select>
-        </div>
-
-        <div class="input-wrap">
-          <label>Water</label>
-          <select class="p-input"></select>
-        </div>
-
-        <!-- ✅ FIXED BUTTON -->
-        <button type="submit" class="btn-save-up">
-          Update Farm Profile
-        </button>
-
-      </form>
+      <div class="main-card">
+        <h3 class="card-title">📝 <span data-i18n="btn_update_farm">Update Farm Profile</span></h3>
+        
+        <form id="profileForm" class="form-grid">
+          <div class="input-wrap">
+            <label data-i18n="label_user_name">Full Name</label>
+            <input type="text" id="pName" class="p-input" required>
+          </div>
+          <div class="input-wrap">
+            <label data-i18n="label_phone">Phone Number</label>
+            <input type="text" id="pPhone" class="p-input" readonly>
+          </div>
+          
+          <div class="input-wrap">
+            <label data-i18n="label_district">District</label>
+            <select id="pDistrict" class="p-input">
+              <option value="">Select District</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <label data-i18n="label_taluk">Taluk</label>
+            <select id="pTaluk" class="p-input">
+              <option value="">Select Taluk</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <label data-i18n="label_mandi">Nearest Mandi</label>
+            <select id="pMandi" class="p-input">
+              <option value="">Select Mandi</option>
+            </select>
+          </div>
+          
+          <div class="input-wrap">
+            <label data-i18n="profile_active_crop">Active Crop</label>
+            <select id="pCrop" class="p-input">
+              <option value="">None</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <label data-i18n="label_soil">Soil Type</label>
+            <select id="pSoil" class="p-input">
+              <option value="Red Loam">Red Loam</option>
+              <option value="Black Soil">Black Soil</option>
+              <option value="Sandy Loam">Sandy Loam</option>
+              <option value="Clayey">Clayey</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <label data-i18n="label_water">Water Availability</label>
+            <select id="pWater" class="p-input">
+              <option value="Irrigated">Irrigated (Borewell/Canal)</option>
+              <option value="Rainfed">Rainfed (Monsoon)</option>
+              <option value="Mixed">Mixed Source</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-save-up" data-i18n="btn_update_farm">Update Farm Profile</button>
+        </form>
+      </div>
 
     </div>
-  </div>
+  </main>
 
-</main>
+  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="f-col-brand">
+        <div class="f-brand">
+          <img src="logo.png" alt="Logo" class="f-logo">
+          <span class="f-title">Raitha Bandhu</span>
+        </div>
+        <p class="f-tag" data-i18n="footer_tagline">Empowering farmers with real-time crop data, mandi prices, and smart recommendations to maximize earnings.</p>
+        
+        <div class="f-states">
+          <div class="f-states-title" data-i18n="states_title">Serving all districts of Karnataka.</div>
+          <div class="f-states-list" data-i18n="states_list">Bangalore Rural | Kolar | Chikkaballapur | Mysuru | Belagavi | Shimoga | Davangere | Bagalkot</div>
+        </div>
+      </div>
 
+      <div class="f-col-links">
+        <h3 class="f-col-title" data-i18n="footer_quick_links">Quick Links</h3>
+        <ul class="f-links">
+          <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+          <li><a href="mandi.html" data-i18n="nav_mandi">Mandi Prices</a></li>
+          <li><a href="weather.html" data-i18n="nav_weather">Weather Station</a></li>
+          <li><a href="profile.html" data-i18n="nav_profile">My Profile</a></li>
+        </ul>
+      </div>
+
+      <div class="f-col-contact">
+        <h3 class="f-col-title" data-i18n="footer_contact_details">Contact Support</h3>
+        <ul class="f-links">
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_helpline">📞 Helpline: 1800-123-4567</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_whatsapp">📱 WhatsApp: +91 98765 43210</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_email">✉️ help@raitha.in</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="f-bottom">
+      <div data-i18n="footer_copy">© 2025 Raitha Bandhu — Smart Crop Decision System.</div>
+      <div data-i18n="footer_note">All prices in ₹/quintal (100 kg) • Data is for guidance only</div>
+    </div>
+  </footer>
+
+  <script src="i18n.js"></script>
+  <script src="data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getSession();
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Sidebar
+      document.getElementById('userNameDisplay').textContent = user.name;
+      document.getElementById('userPhoneDisplay').textContent = user.phone;
+
+      // Stats
+      document.getElementById('statLoc').textContent = user.location || "N/A";
+      document.getElementById('statCrop').textContent = user.growing || "None";
+      document.getElementById('statMandi').textContent = user.mandi || "None";
+
+      // Form Initialization
+      document.getElementById('pName').value = user.name;
+      document.getElementById('pPhone').value = user.phone;
+      
+      const pDistrict = document.getElementById('pDistrict');
+      const pTaluk = document.getElementById('pTaluk');
+      const pMandi = document.getElementById('pMandi');
+      const pCrop = document.getElementById('pCrop');
+
+      // Populate Crops
+      CROPS.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.name;
+        opt.textContent = cropName(c);
+        pCrop.appendChild(opt);
+      });
+      pCrop.value = user.growing || "";
+
+      // Populate Districts
+      Object.keys(DISTRICT_DATA).forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        pDistrict.appendChild(opt);
+      });
+      pDistrict.value = user.location || "";
+
+      // Helper to update taluks
+      const updateTaluks = (distVal, selectedTaluk) => {
+        pTaluk.innerHTML = '<option value="">Select Taluk</option>';
+        pMandi.innerHTML = '<option value="">Select Mandi</option>';
+        if (distVal && DISTRICT_DATA[distVal]) {
+          Object.keys(DISTRICT_DATA[distVal].taluks).forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t;
+            opt.textContent = t;
+            pTaluk.appendChild(opt);
+          });
+          if(selectedTaluk) pTaluk.value = selectedTaluk;
+        }
+      };
+
+      // Helper to update mandis
+      const updateMandis = (distVal, talukVal, selectedMandi) => {
+        pMandi.innerHTML = '<option value="">Select Mandi</option>';
+        if (distVal && talukVal && DISTRICT_DATA[distVal].taluks[talukVal]) {
+          DISTRICT_DATA[distVal].taluks[talukVal].forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m;
+            opt.textContent = m;
+            pMandi.appendChild(opt);
+          });
+          if(selectedMandi) pMandi.value = selectedMandi;
+        }
+      };
+
+      pDistrict.addEventListener('change', () => updateTaluks(pDistrict.value));
+      pTaluk.addEventListener('change', () => updateMandis(pDistrict.value, pTaluk.value));
+
+      // Load saved sub-locations
+      if(user.location) updateTaluks(user.location, user.taluk);
+      if(user.location && user.taluk) updateMandis(user.location, user.taluk, user.mandi);
+
+      document.getElementById('pSoil').value = user.soil || "Red Loam";
+      document.getElementById('pWater').value = user.water || "Irrigated";
+
+      document.getElementById('profileForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const updated = {
+          ...user,
+          name: document.getElementById('pName').value,
+          location: pDistrict.value,
+          taluk: pTaluk.value,
+          mandi: pMandi.value,
+          growing: pCrop.value,
+          soil: document.getElementById('pSoil').value,
+          water: document.getElementById('pWater').value,
+          isLoggedIn: true
+        };
+        localStorage.setItem('raitha_user', JSON.stringify(updated));
+        alert(getCurrentLang() === 'kn' ? "ಪ್ರೊಫೈಲ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ!" : "Profile Updated Successfully!");
+        window.location.reload();
+      });
+    });
+  </script>
 </body>
 </html>
