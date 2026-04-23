@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Crop Detail — Raitha</title>
+  <meta name="description" content="Detailed crop analysis with price trends per quintal, risk assessment, and smart recommendations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- ─── SPLASH SCREEN ──────────────────────────────────────── -->
+  <div id="splashScreen">
+    <div class="splash-logo-container">
+      <img src="logo.png" alt="Raitha Bandhu" class="splash-logo-img">
+      <div class="splash-title">RAITHA BANDHU</div>
+    </div>
+  </div>
+
+  <!-- ─── HEADER ─────────────────────────────────────────────── -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="brand">
+          <img src="logo.png" alt="Logo" class="app-logo-img">
+          <span class="brand-name">Raitha Bandhu</span>
+        </a>
+        <nav class="nav-tabs">
+          <a href="index.html" class="nav-tab" data-i18n="nav_home">Home</a>
+          <a href="mandi.html" class="nav-tab" data-i18n="nav_mandi">Mandi Prices</a>
+          <a href="weather.html" class="nav-tab" data-i18n="nav_weather">Weather</a>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <div class="search-bar">
+          <span class="search-trigger-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search crops…" autocomplete="off">
+          <div id="suggestions" class="suggestions"></div>
+        </div>
+        <div id="authSection" class="auth-section"></div>
+        <button id="langToggleBtn" class="lang-toggle-btn" onclick="toggleLanguage()">ಕನ್ನಡ</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── NOTICE BAR ──────────────────────────────────────────── -->
+  <div class="notice-bar" data-i18n-html="notice_bar">
+    ⚠️ All prices shown are in <strong>₹ per quintal (100 kg)</strong> — Updated daily from major agricultural mandis
+  </div>
+
+  <!-- ─── BREADCRUMB ──────────────────────────────────────────── -->
+
+  <!-- ─── MAIN CROP DETAIL ─────────────────────────────────────── -->
+  <main class="main-content detail-layout">
+
+    <!-- ── LEFT: CROP INFO + CHART ──────────────────────────── -->
+    <div class="detail-primary">
+
+      <!-- Crop Hero Card -->
+      <div class="detail-hero">
+        <div class="dh-left">
+          <div class="dh-icon" id="cropIcon">🌱</div>
+          <div>
+            <h1 class="dh-name" id="cropName">Loading…</h1>
+            <div class="dh-meta">
+              <span class="dh-cat" id="cropCat">—</span>
+              <span class="dh-season" id="cropSeason">—</span>
+              <span class="dh-harvest" id="cropHarvest">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="dh-price-block">
+          <div class="dh-today" id="cropToday">₹—</div>
+          <span class="dh-today-unit" data-i18n="per_qtl_unit">per quintal (100 kg)</span>
+          <div class="dh-change" id="cropChange">—</div>
+          <div class="dh-yesterday" id="cropYesterday">—</div>
+        </div>
+      </div>
+
+      <!-- Key Metrics Row -->
+      <div class="metrics-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+        <div class="metric-card" id="riskCard">
+          <div class="metric-icon">⚠️</div>
+          <div class="metric-label" data-i18n="risk_level">Risk Level</div>
+          <div class="metric-val" id="riskVal">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">📈</div>
+          <div class="metric-label" data-i18n="yearly_profit_label">Yearly Profit</div>
+          <div class="metric-val" id="profitVal">—</div>
+        </div>
+        <div class="metric-card" style="position: relative;">
+          <div id="popularityBadge" style="position: absolute; top: -10px; right: -10px; background: #fbbf24; color: #78350f; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid white; display: none;">TRENDING</div>
+          <div class="metric-icon">🔥</div>
+          <div class="metric-label" data-i18n="demand_score">Market Demand</div>
+          <div class="metric-val" id="demandVal">—</div>
+        </div>
+        <div class="metric-card" id="growingCountCard">
+          <div class="metric-icon">👨‍🌾</div>
+          <div class="metric-label" data-i18n="farmers_growing">District Popularity</div>
+          <div class="metric-val" id="growingCountVal">—</div>
+        </div>
+        <div class="metric-card" id="sellStrategyCard" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1.5px solid #10b981;">
+          <div class="metric-icon">💰</div>
+          <div class="metric-label" style="color: #64748b;" data-i18n="label_sell_strategy">Sell Strategy</div>
+          <div class="metric-val" id="sellDecision" style="color: #047857;">—</div>
+        </div>
+      </div>
+
+      <!-- District Insight & Sell Insight Card -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;" class="info-grid-split">
+        <div class="chart-card" style="margin:0; background: #f8fafc;">
+          <div class="chart-header">
+            <h2 class="chart-title">📍 <span data-i18n="district_insights_title">District Insights</span></h2>
+          </div>
+          <div id="districtInsights" style="margin-top:12px"></div>
+        </div>
+        <div class="chart-card" style="margin:0; background: #fff7ed;">
+          <div class="chart-header">
+            <h2 class="chart-title">📅 <span data-i18n="smart_selling_title">Smart Selling Insight</span></h2>
+          </div>
+          <div id="sellInsights" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <!-- Growing Status (Dynamic) -->
+      <div id="growingStatus" style="margin-bottom: 24px;"></div>
+
+      <!-- Price Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2 class="chart-title"><span data-i18n="price_trend_title">Price Trend</span> <small style="font-size:12px; color:var(--text-muted); font-weight:500;">(Monthly Range: <span id="priceRangeLabel">--</span>)</small></h2>
+          <div class="chart-tabs">
+            <button class="chart-tab active" id="tab30" data-i18n="last_30_days">Last 30 Days</button>
+            <button class="chart-tab" id="tab12" data-i18n="last_12_months">12 Months</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+
+
+
+      <!-- Hybrid Varieties & Diseases -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;" class="info-grid-split">
+        <div class="chart-card" style="margin:0">
+          <div class="chart-header">
+            <h2 class="chart-title" data-i18n="hybrid_varieties">🧬 Hybrid Varieties</h2>
+          </div>
+          <div id="hybridList" class="hybrid-list" style="margin-top:12px"></div>
+        </div>
+        <div class="chart-card" style="margin:0">
+          <div class="chart-header">
+            <h2 class="chart-title" data-i18n="common_diseases">🦠 Common Diseases</h2>
+          </div>
+          <div id="diseaseList" class="disease-list" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <!-- Crop Information Section -->
+      <div class="chart-card" id="cropInfoCard" style="margin-bottom: 0;">
+         <div class="chart-header" style="margin-bottom: 12px;">
+           <h2 class="chart-title" data-i18n="growing_guide">🌱 Crop Insights & Growing Guide</h2>
+         </div>
+         <p id="cropInfoText" style="color:var(--text-sub); font-size:15px; margin-bottom: 24px; line-height:1.6;"></p>
+         <div class="info-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:16px;" id="cropInfoGrid"></div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT: RECOMMENDATION + ALTERNATIVES ─────────────── -->
+    <div class="detail-secondary">
+
+      <!-- Recommendation Box -->
+      <div class="rec-box" id="recBox">
+        <div class="rec-icon" id="recIcon">🧠</div>
+        <h3 class="rec-title" data-i18n="smart_rec">Smart Recommendation</h3>
+        <p class="rec-text" id="recText" data-i18n="analyzing">Analyzing crop data…</p>
+        <div class="rec-decision" id="recDecision"></div>
+      </div>
+
+      <!-- Advanced Risk Analyzer -->
+      <div class="alt-box" id="riskGrid" style="margin-top: 16px;">
+        <h3 class="alt-title" data-i18n="risk_analyzer">📊 Advanced Risk Analyzer</h3>
+        <p class="alt-sub" data-i18n="risk_analyzer_sub">Data-driven market stability metrics</p>
+        <div class="risk-advanced">
+          <div class="risk-adv-item">
+            <div class="risk-adv-header">
+              <span class="risk-adv-label" data-i18n="label_pvi">Price Change Range (Monthly)</span>
+              <span class="risk-adv-val" id="pviVal">—</span>
+            </div>
+            <div class="risk-meter"><div class="risk-meter-bar risk-bar-pvi" id="pviBar" style="width: 0%"></div></div>
+          </div>
+          <div class="risk-adv-item">
+            <div class="risk-adv-header">
+              <span class="risk-adv-label" data-i18n="label_weather_risk">Season Weather Risk</span>
+              <span class="risk-adv-val" id="weatherRiskVal">—</span>
+            </div>
+            <div class="risk-meter"><div class="risk-meter-bar risk-bar-weather" id="weatherRiskBar" style="width: 0%"></div></div>
+          </div>
+          <div class="risk-adv-item">
+            <div class="risk-adv-header">
+              <span class="risk-adv-label" data-i18n="label_market_sentiment">Market Sentiment</span>
+              <span class="risk-adv-val" id="sentimentVal">—</span>
+            </div>
+            <div class="risk-meter"><div class="risk-meter-bar risk-bar-sentiment" id="sentimentBar" style="width: 0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seed Sold Stats -->
+      <div class="stat-box" style="margin-top: 16px;">
+        <h3 class="stat-box-title" data-i18n="avg_demand">📦 Avg Local Market Demand</h3>
+        <div class="seed-stat" id="seedStat">—</div>
+        <div class="seed-bar-outer">
+          <div class="seed-bar-inner" id="seedBar"></div>
+        </div>
+      </div>
+
+      <!-- Alternative Crops -->
+      <div class="alt-box">
+        <h3 class="alt-title" data-i18n="better_alternatives">🔄 Better Alternatives</h3>
+        <p class="alt-sub" data-i18n="same_season">Same season crops with better scores</p>
+        <div class="alt-list" id="altList"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="f-col-brand">
+        <div class="f-brand">
+          <img src="logo.png" alt="Logo" class="f-logo">
+          <span class="f-title">Raitha Bandhu</span>
+        </div>
+        <p class="f-tag" data-i18n="footer_tagline">Empowering farmers with real-time crop data, mandi prices, and smart recommendations to maximize earnings.</p>
+        
+        <div class="f-states">
+          <div class="f-states-title" data-i18n="states_title">Serving all districts of Karnataka.</div>
+          <div class="f-states-list" data-i18n="states_list">Bangalore Rural | Kolar | Chikkaballapur | Mysuru | Belagavi | Shimoga | Davangere | Bagalkot</div>
+        </div>
+      </div>
+
+      <div class="f-col-links">
+        <h3 class="f-col-title" data-i18n="footer_quick_links">Quick Links</h3>
+        <ul class="f-links">
+          <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+          <li><a href="mandi.html" data-i18n="nav_mandi">Mandi Prices</a></li>
+          <li><a href="weather.html" data-i18n="nav_weather">Weather Station</a></li>
+          <li><a href="profile.html" data-i18n="nav_profile">My Profile</a></li>
+        </ul>
+      </div>
+
+      <div class="f-col-contact">
+        <h3 class="f-col-title" data-i18n="footer_contact_details">Contact Support</h3>
+        <ul class="f-links">
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_helpline">📞 Helpline: 1800-123-4567</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_whatsapp">📱 WhatsApp: +91 98765 43210</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_email">✉️ help@raitha.in</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="f-bottom">
+      <div data-i18n="footer_copy">© 2025 Raitha Bandhu — Smart Crop Decision System.</div>
+      <div data-i18n="footer_note">All prices in ₹/quintal (100 kg) • Data is for guidance only</div>
+    </div>
+  </footer>
+
+  <script src="i18n.js"></script>
+  <script src="data.js"></script>
+  <script src="crop.js"></script>
+</body>
+</html>

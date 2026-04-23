@@ -1,0 +1,75 @@
+/* ── MOBILE OPTIMIZATIONS ─────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    height: auto;
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .header {
+    height: auto;
+  }
+
+  .search-bar {
+    width: 100% !important;
+  }
+
+  .nav-tabs {
+    width: 100%;
+    justify-content: space-around;
+    overflow-x: auto;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .hero-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-card {
+    width: 100%;
+    max-width: none;
+  }
+
+  .mandi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .metrics-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .dh-left {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .dh-price-block {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .info-grid-split {
+    grid-template-columns: 1fr !important;
+  }
+}

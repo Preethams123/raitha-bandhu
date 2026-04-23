@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Weather Station — Raitha Bandhu</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .weather-main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .weather-hero {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      color: white;
+      border-radius: 24px;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weather-hero::after {
+      content: "☁️";
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      font-size: 200px;
+      opacity: 0.1;
+      transform: rotate(-10deg);
+    }
+
+    .wh-left h1 { font-size: 42px; font-weight: 900; margin-bottom: 8px; }
+    .wh-location { font-size: 18px; opacity: 0.9; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;}
+    .wh-temp-row { display: flex; align-items: center; gap: 24px; }
+    .wh-temp { font-size: 72px; font-weight: 900; }
+    .wh-icon { font-size: 80px; }
+
+    .wh-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .wh-item {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .wh-lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
+    .wh-val { font-size: 20px; font-weight: 800; }
+
+    .forecast-section {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .forecast-title { font-size: 22px; font-weight: 900; margin-bottom: 24px; }
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 16px;
+    }
+
+    .f-day {
+      text-align: center;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: transform 0.3s;
+    }
+    .f-day:hover { transform: translateY(-5px); border-color: var(--green-mid); }
+    .f-date { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+    .f-icon { font-size: 32px; margin-bottom: 12px; }
+    .f-temp-max { font-size: 18px; font-weight: 800; color: var(--text); }
+    .f-temp-min { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .f-rain { font-size: 10px; color: #3b82f6; margin-top: 8px; font-weight: 700; }
+
+    @media (max-width: 900px) {
+      .weather-hero { grid-template-columns: 1fr; padding: 32px; }
+      .forecast-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="brand">
+          <img src="logo.png" alt="Logo" class="app-logo-img">
+          <span class="brand-name">Raitha Bandhu</span>
+        </a>
+        <nav class="nav-tabs">
+          <a href="index.html" class="nav-tab" data-i18n="nav_home">Home</a>
+          <a href="mandi.html" class="nav-tab" data-i18n="nav_mandi">Mandi Prices</a>
+          <a href="weather.html" class="nav-tab active" data-i18n="nav_weather">Weather</a>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <div class="search-bar">
+          <span class="search-trigger-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search crops…" autocomplete="off">
+          <div id="suggestions" class="suggestions"></div>
+        </div>
+        <div id="authSection" class="auth-section"></div>
+        <button id="langToggleBtn" class="lang-toggle-btn" onclick="toggleLanguage()">ಕನ್ನಡ</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="weather-main">
+    
+    <div class="weather-hero">
+      <div class="wh-left">
+        <h1 data-i18n="live_weather">Live Weather</h1>
+        <div class="wh-location" id="curLoc">📍 Detecting...</div>
+        <div class="wh-temp-row">
+          <div class="wh-icon" id="curIcon">☀️</div>
+          <div class="wh-temp" id="curTemp">--°C</div>
+        </div>
+        <div id="curDesc" style="font-size:18px; font-weight:600; margin-top:12px;" data-i18n="analyzing">Detecting...</div>
+      </div>
+      <div class="wh-grid">
+        <div class="wh-item">
+          <div class="wh-lbl" data-i18n="humidity">Humidity</div>
+          <div class="wh-val" id="curHum">--%</div>
+        </div>
+        <div class="wh-item">
+          <div class="wh-lbl" data-i18n="rainfall">Rainfall</div>
+          <div class="wh-val" id="curRain">0.0 mm</div>
+        </div>
+        <div class="wh-item">
+          <div class="wh-lbl" data-i18n="wind_speed">Wind Speed</div>
+          <div class="wh-val" id="curWind">-- km/h</div>
+        </div>
+        <div class="wh-item">
+          <div class="wh-lbl" data-i18n="uv_index">UV Index</div>
+          <div class="wh-val" id="curUV">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEASONAL OUTLOOK (NEW) -->
+    <div style="background: #e0f2fe; padding: 24px; border-radius: 24px; margin-bottom: 32px; border: 1px solid #bae6fd; display: flex; align-items: center; gap: 24px;">
+       <div style="font-size: 40px;">🌧️</div>
+       <div style="flex: 1;">
+         <h3 style="font-size: 18px; font-weight: 900; color: #0369a1;" data-i18n="expected_rain">Expected Seasonal Rain</h3>
+         <p style="font-size: 14px; color: #075985; opacity: 0.8;" data-i18n="current_season_rain">Current Season Rainfall</p>
+       </div>
+       <div style="text-align: right;">
+         <div id="seasonalRainVal" style="font-size: 32px; font-weight: 900; color: #0284c7;">-- mm</div>
+         <div style="font-size: 12px; color: #0369a1; font-weight: 700;" id="seasonNameLbl">Monsoon 2024</div>
+       </div>
+    </div>
+
+    <!-- MONTHLY RAINFALL ANALYSIS (NEW) -->
+    <div class="forecast-section" style="margin-bottom: 32px;">
+      <h2 class="forecast-title">📊 <span data-i18n="monthly_rainfall_analysis">Monthly Rainfall Analysis (2025)</span></h2>
+      <div style="height: 300px; position: relative;">
+        <canvas id="rainfallChart"></canvas>
+      </div>
+    </div>
+
+    <div class="forecast-section">
+      <h2 class="forecast-title">📅 <span data-i18n="weather_planning">7-Day Planning Forecast</span></h2>
+      <div class="forecast-grid" id="forecastGrid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="f-col-brand">
+        <div class="f-brand">
+          <img src="logo.png" alt="Logo" class="f-logo">
+          <span class="f-title">Raitha Bandhu</span>
+        </div>
+        <p class="f-tag" data-i18n="footer_tagline">Empowering farmers with real-time crop data, mandi prices, and smart recommendations to maximize earnings.</p>
+        
+        <div class="f-states">
+          <div class="f-states-title" data-i18n="states_title">Serving all districts of Karnataka.</div>
+          <div class="f-states-list" data-i18n="states_list">Bangalore Rural | Kolar | Chikkaballapur | Mysuru | Belagavi | Shimoga | Davangere | Bagalkot</div>
+        </div>
+      </div>
+
+      <div class="f-col-links">
+        <h3 class="f-col-title" data-i18n="footer_quick_links">Quick Links</h3>
+        <ul class="f-links">
+          <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+          <li><a href="mandi.html" data-i18n="nav_mandi">Mandi Prices</a></li>
+          <li><a href="weather.html" data-i18n="nav_weather">Weather Station</a></li>
+          <li><a href="profile.html" data-i18n="nav_profile">My Profile</a></li>
+        </ul>
+      </div>
+
+      <div class="f-col-contact">
+        <h3 class="f-col-title" data-i18n="footer_contact_details">Contact Support</h3>
+        <ul class="f-links">
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_helpline">📞 Helpline: 1800-123-4567</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_whatsapp">📱 WhatsApp: +91 98765 43210</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_email">✉️ help@raitha.in</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="f-bottom">
+      <div data-i18n="footer_copy">© 2025 Raitha Bandhu — Smart Crop Decision System.</div>
+      <div data-i18n="footer_note">All prices in ₹/quintal (100 kg) • Data is for guidance only</div>
+    </div>
+  </footer>
+
+  <script src="i18n.js"></script>
+  <script src="weather.js"></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Sign Up — Raitha Bandhu</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css">
+  <style>
+    body {
+      background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .auth-container {
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+    }
+    .back-home {
+      position: absolute;
+      top: -50px;
+      left: 0;
+      color: white;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .back-home:hover { opacity: 0.8; }
+
+    .auth-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      animation: glideUp 0.6s ease-out;
+    }
+    .auth-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .auth-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 24px;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--green-mid);
+    }
+    .btn-auth {
+      width: 100%;
+      background: var(--green);
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 12px;
+      transition: all 0.2s;
+    }
+    .btn-auth:hover {
+      background: var(--green-mid);
+      transform: translateY(-2px);
+    }
+    .auth-switch {
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .auth-switch a {
+      color: var(--green-mid);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <button id="langToggleBtn" class="login-lang-btn" onclick="toggleLanguage()">ಕನ್ನಡ</button>
+    <a href="index.html" class="back-home" data-i18n="back_to_home">← Back to Home Page</a>
+
+    <!-- LOGIN CARD -->
+    <div class="auth-card" id="loginCard">
+      <img src="logo.png" alt="Raitha Bandhu" class="auth-logo" style="border-radius:12px;">
+      <h1 class="auth-title" data-i18n="login_welcome_back">Welcome Back</h1>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_phone">Phone Number</label>
+          <input type="tel" id="loginPhone" class="form-input" placeholder="+91 00000 00000" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_pass">Password</label>
+          <input type="password" id="loginPass" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-auth" data-i18n="login_btn">Login</button>
+      </form>
+
+      <p class="auth-switch"><span data-i18n="login_no_account">Don't have an account?</span> <a onclick="toggleAuth()" data-i18n="login_create_link">Create Account</a></p>
+    </div>
+
+    <!-- SIGNUP CARD -->
+    <div class="auth-card hidden" id="signupCard">
+      <img src="logo.png" alt="Raitha Bandhu" class="auth-logo" style="border-radius:12px;">
+      <h1 class="auth-title" data-i18n="login_create_account">Create Account</h1>
+      
+      <form id="signupForm">
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_full_name">Full Name</label>
+          <input type="text" id="signupName" class="form-input" data-i18n-placeholder="signup_name_placeholder" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_phone">Phone Number</label>
+          <input type="tel" id="signupPhone" class="form-input" placeholder="+91 00000 00000" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="login_pass_create">Create Password</label>
+          <input type="password" id="signupPass" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-auth" data-i18n="login_signup_btn">Sign Up</button>
+      </form>
+
+      <p class="auth-switch"><span data-i18n="login_have_account">Already have an account?</span> <a onclick="toggleAuth()" data-i18n="login_instead_link">Login instead</a></p>
+    </div>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script>
+    function toggleAuth() {
+      document.getElementById('loginCard').classList.toggle('hidden');
+      document.getElementById('signupCard').classList.toggle('hidden');
+    }
+
+    // LOGIN LOGIC
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('loginPhone').value;
+      
+      // For demo, we just check if any user exists in localStorage or mock one
+      const stored = JSON.parse(localStorage.getItem('raitha_user'));
+      if (stored && stored.phone === phone) {
+        stored.isLoggedIn = true;
+        localStorage.setItem('raitha_user', JSON.stringify(stored));
+        window.location.href = 'index.html';
+      } else {
+        // Mock successful login for any phone if no user found (for easier testing)
+        const user = {
+          name: "Farmer User",
+          phone: phone,
+          isLoggedIn: true,
+          location: "Karnataka",
+          cropping: "Mixed Cropping",
+          mandi: "Bangalore",
+          water: "Borewell",
+          soil: "Red Loam"
+        };
+        localStorage.setItem('raitha_user', JSON.stringify(user));
+        window.location.href = 'index.html';
+      }
+    });
+
+    // SIGNUP LOGIC
+    document.getElementById('signupForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const phone = document.getElementById('signupPhone').value;
+      
+      const user = {
+        name: name,
+        phone: phone,
+        isLoggedIn: true,
+        location: "Select District",
+        cropping: "Traditional",
+        mandi: "Nearest Mandi",
+        water: "Rainfed",
+        soil: "Unknown"
+      };
+      
+      localStorage.setItem('raitha_user', JSON.stringify(user));
+      alert("Account created successfully!");
+      window.location.href = 'profile.html'; // Go to profile to finish setup
+    });
+  </script>
+</body>
+</html>

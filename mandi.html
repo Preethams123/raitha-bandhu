@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mandi Prices — Raitha Bandhu</title>
+  <meta name="description" content="Live mandi prices per quintal for 120+ crops. Compare today vs yesterday prices, sort by trend, filter by category.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+
+  <!-- ─── SPLASH SCREEN ──────────────────────────────────────── -->
+  <div id="splashScreen">
+    <div class="splash-logo-container">
+      <img src="logo.png" alt="Raitha Bandhu" class="splash-logo-img">
+      <div class="splash-title">RAITHA BANDHU</div>
+    </div>
+  </div>
+
+  <!-- ─── HEADER ─────────────────────────────────────────────── -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="index.html" class="brand">
+          <img src="logo.png" alt="Logo" class="app-logo-img">
+          <span class="brand-name">Raitha Bandhu</span>
+        </a>
+        <nav class="nav-tabs">
+          <a href="index.html" class="nav-tab" data-i18n="nav_home">Home</a>
+          <a href="mandi.html" class="nav-tab active" data-i18n="nav_mandi">Mandi Prices</a>
+          <a href="weather.html" class="nav-tab" data-i18n="nav_weather">Weather</a>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <div class="search-bar">
+          <span class="search-trigger-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search crops…" autocomplete="off">
+          <div id="suggestions" class="suggestions"></div>
+        </div>
+        <div id="authSection" class="auth-section"></div>
+        <button id="langToggleBtn" class="lang-toggle-btn" onclick="toggleLanguage()">ಕನ್ನಡ</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── NOTICE BAR ──────────────────────────────────────────── -->
+  <div class="notice-bar" data-i18n-html="notice_bar">
+    ⚠️ All prices shown are in <strong>₹ per quintal (100 kg)</strong> — Updated daily from major agricultural mandis
+  </div>
+
+  <!-- ─── PAGE HEADER (HERO) ─────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title" data-i18n="mandi_page_title">📊 Live Mandi Prices</h1>
+      <p class="hero-sub" data-i18n="mandi_page_sub">Today's prices per quintal for all crops — compare, filter, and click any crop for full details</p>
+    </div>
+  </section>
+
+  <!-- ─── FILTERS ─────────────────────────────────────────────── -->
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="filter-group">
+        <label class="filter-label" data-i18n="filter_search">Search Crop</label>
+        <input type="text" id="mandiSearch" class="toolbar-search" data-i18n-placeholder="filter_search" placeholder="e.g. Tomato, Rice…">
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label" data-i18n="filter_category">Category</label>
+        <select id="catFilter" class="filter-select">
+          <option value="" data-i18n="filter_all_categories">All Categories</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label" data-i18n="filter_season">Season</label>
+        <select id="seasonFilter" class="filter-select">
+          <option value="" data-i18n="filter_all_seasons">All Seasons</option>
+          <option value="Kharif" data-i18n="season_kharif">Kharif</option>
+          <option value="Rabi" data-i18n="season_rabi">Rabi</option>
+          <option value="Summer" data-i18n="season_zaid">Summer</option>
+          <option value="Winter" data-i18n="season_rabi">Winter</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label" data-i18n="filter_sort">Sort By</label>
+        <select id="sortFilter" class="filter-select">
+          <option value="price-desc" data-i18n="sort_price_high">Price: High to Low</option>
+          <option value="price-asc" data-i18n="sort_price_low">Price: Low to High</option>
+          <option value="name-asc" data-i18n="sort_name_az">Name A to Z</option>
+          <option value="trending-up" data-i18n="sort_trending_up">Rising Prices ↑</option>
+          <option value="trending-down" data-i18n="sort_trending_down">Falling Prices ↓</option>
+          <option value="risk-low" data-i18n="sort_risk_low">Lowest Risk First</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SUMMARY BAR ─────────────────────────────────────────── -->
+  <div class="mandi-summary" id="mandiSummary" style="max-width: 1200px; margin: 24px auto 0; padding: 0 24px;">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- ─── MANDI LIST ───────────────────────────────────────────── -->
+  <main class="main-content">
+    <div class="mandi-grid" id="mandiGrid"></div>
+    <div id="mandiPagination" style="text-align: center; margin-top: 32px;"></div>
+  </main>
+
+  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="f-col-brand">
+        <div class="f-brand">
+          <img src="logo.png" alt="Logo" class="f-logo">
+          <span class="f-title">Raitha Bandhu</span>
+        </div>
+        <p class="f-tag" data-i18n="footer_tagline">Empowering farmers with real-time crop data, mandi prices, and smart recommendations to maximize earnings.</p>
+        
+        <div class="f-states">
+          <div class="f-states-title" data-i18n="states_title">Serving all districts of Karnataka.</div>
+          <div class="f-states-list" data-i18n="states_list">Bangalore Rural | Kolar | Chikkaballapur | Mysuru | Belagavi | Shimoga | Davangere | Bagalkot</div>
+        </div>
+      </div>
+
+      <div class="f-col-links">
+        <h3 class="f-col-title" data-i18n="footer_quick_links">Quick Links</h3>
+        <ul class="f-links">
+          <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+          <li><a href="mandi.html" data-i18n="nav_mandi">Mandi Prices</a></li>
+          <li><a href="weather.html" data-i18n="nav_weather">Weather Station</a></li>
+          <li><a href="profile.html" data-i18n="nav_profile">My Profile</a></li>
+        </ul>
+      </div>
+
+      <div class="f-col-contact">
+        <h3 class="f-col-title" data-i18n="footer_contact_details">Contact Support</h3>
+        <ul class="f-links">
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_helpline">📞 Helpline: 1800-123-4567</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_whatsapp">📱 WhatsApp: +91 98765 43210</li>
+          <li style="color:#fff; opacity:0.8; font-size:14px;" data-i18n="footer_email">✉️ help@raitha.in</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="f-bottom">
+      <div data-i18n="footer_copy">© 2025 Raitha Bandhu — Smart Crop Decision System.</div>
+      <div data-i18n="footer_note">All prices in ₹/quintal (100 kg) • Data is for guidance only</div>
+    </div>
+  </footer>
+
+  <script src="i18n.js"></script>
+  <script src="data.js"></script>
+  <script src="mandi.js"></script>
+</body>
+</html>
